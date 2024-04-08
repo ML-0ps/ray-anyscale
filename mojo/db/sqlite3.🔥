@@ -1,0 +1,33 @@
+from python import Python as impy 
+
+trait Database:
+    fn insert(self, key: String, value: String) raises:
+        ...
+
+    fn print_all(self) raises:
+        ...
+
+
+struct SQLite(Database):
+    var con: PythonObject
+    var cur: PythonObject
+
+    fn __init__(inout self, path: StringLiteral) raises:
+        let sqlite3 = Python.import_module("sqlite3")
+        self.con = sqlite3.connect(path)
+        self.cur = self.con.cursor()
+        _ = self.cur.execute("CREATE TABLE IF NOT EXISTS test (key TEXT, value TEXT)")
+
+    fn insert(self, key: String, value: String) raises:
+        var query = String("INSERT INTO test VALUES ('")
+        query += key
+        query += "', '"
+        query += value
+        query += "')"
+        _ = self.cur.execute(query)
+
+    fn print_all(self) raises:
+        let query = String("SELECT * FROM test")
+        var result = self.cur.execute(query)
+        for row in result:
+            print(row)

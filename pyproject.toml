@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "anyscale-synavate"
+version = "0.1.0"
+description = "Anyscale library for Synavate, Orion Constellation and other libraries of good stuff."
+authors = ["snyata <core@synavate.tech>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+numpy = "^1.26.4"
+ray = {extras = ["data"], version = "^2.10.0"}
+transformers = "^4.39.3"
+pymongo = "^4.6.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

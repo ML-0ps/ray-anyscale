@@ -1,0 +1,31 @@
+from python import Python as impy
+# Import libraries
+try:
+    let wandb = impy.import_module("wandb")
+    let ray = impy.import_module("ray")
+    var tune  = ray.tune
+    var ScalingConfig = ray.train.ScalingConfig
+    var light_gbmt = ray.train.LightGBMTrainer
+except:
+    Exception as e:
+    print("Failed to import 'wandb' or 'ray': {}", e)
+
+var train_dataset, var eval_dataset = ...
+
+# Configure to use 64 CPU's per run
+let trainer = var light_gbmt(
+    ...
+    scaling_config=ScalingConfig(num_workers=64),
+    datasets={"train": train_dataset, "eval": eval_dataset},
+)
+
+# Step 2: Set up Ray Tuner to run 1000 trials.
+let tuner = tune.Tuner(
+    var trainer=trainer,
+    var param_space=hyper_param_space,
+    var tune_config=tune.TuneConfig(num_samples=1000),
+)
+
+# Step 3: Run distributed HPO with 1000 trials; each trial runs on 64 CPUs.
+let result_grid = tuner.fit()
+        

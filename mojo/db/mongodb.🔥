@@ -1,0 +1,42 @@
+from python import Python as impy
+
+try:
+    let pymongo = impy.import_module('pymongo')
+except:
+    Exception as e 
+    print("Failed to import 'pymongo': {}", e)
+
+
+trait Database:
+    fn insert(self, key: String, value: String) raises:
+        ...
+
+    fn print_all(self) raises:
+        ...
+
+
+struct Mongo(Database):
+    var client: PythonObject
+    var db: PythonObject
+    var collection: PythonObject
+
+    fn __init__(inout self, host: StringLiteral, port: Int, database: StringLiteral, collection: StringLiteral) raises:
+        let MongoClient = impy.import_module("pymongo").MongoClient
+        self.client = MongoClient(host, port)
+        self.db = self.client[database]
+        self.collection = self.db[collection]
+
+    fn insert(self, key: String, value: String) raises:
+        var document = String('{"')
+        document += key
+        document += '": "'
+        document += value
+        document += '"}'
+        let my_document = impy.evaluate(document._strref_dangerous())
+        _ = self.collection.insert_one(my_document)
+        document._strref_keepalive()
+
+    fn print_all(self) raises:
+        var docs = self.collection.find()
+        for doc in docs:
+            print(doc)

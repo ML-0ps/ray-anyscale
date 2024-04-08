@@ -1,0 +1,20 @@
+from ray.rllib.algorithms.ppo import PPOConfig
+
+# Step 1: Configure PPO to run 64 parallel workers to collect samples from the env.
+ppo_config = (
+    PPOConfig()
+    .environment(env="Taxi-v3")
+    .rollouts(num_rollout_workers=64)
+    .framework("torch")
+    .training(model=rnn_lage)
+)
+
+# Step 2: Build the PPO algorithm.
+ppo_algo = ppo_config.build()
+
+# Step 3: Train and evaluate PPO.
+for _ in range(5):
+    print(ppo_algo.train())
+
+ppo_algo.evaluate()
+        

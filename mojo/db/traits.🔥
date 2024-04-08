@@ -1,0 +1,6 @@
+trait Database:
+    fn insert(self, key: String, value: String) raises:
+        ...
+
+    fn print_all(self) raises:
+        ...
