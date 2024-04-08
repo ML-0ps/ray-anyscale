@@ -1,1 +1,4 @@
 .env
+notebooks/raytorch/
+raytorch/
+node_modules/
